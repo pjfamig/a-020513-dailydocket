@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>The Daily Docket</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+
+
+<meta charset="utf-8" />
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+  <link rel="stylesheet" href="/resources/demos/style.css" />
+  <script>
+$(document).ready(function(){
+    //  When user clicks on tab, this code will be executed
+    $("#tabs li").click(function() {
+        //  First remove class "active" from currently active tab
+        $("#tabs li").removeClass('active');
+
+        //  Now add class "active" to the selected/clicked tab
+        $(this).addClass("active");
+
+        //  Hide all tab content
+        $(".tab_content").hide();
+
+        //  Here we get the href value of the selected tab
+        var selected_tab = $(this).find("a").attr("href");
+
+        //  Show the selected tab content
+        $(selected_tab).fadeIn();
+
+        //  At the end, we add return false so that the click on the link is not executed
+        return false;
+    });
+});
+
+  </script>
+
+<script language="javascript"> 
+function toggle() {
+	var ele = document.getElementById("toggleText");
+	var text = document.getElementById("displayText");
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+		text.innerHTML = "Show Comments";
+  	}
+	else {
+		ele.style.display = "block";
+		text.innerHTML = "Hide Comments";
+	}
+} 
+</script>
+
+<script type="text/javascript" src="assets/javascripts/jquery.dropdown.js"></script>
+
+</head>
+<body>
+
+<br>
+<div align="center">
+	
+	<h1>The Daily Docket</h1>
+	<h4><%= Time.now.strftime("%A, %B %d, %Y") %></h4>
+	
+<div id="box">
+	<p><%=  link_to_modal "Post now!", new_post_path, :class=>"button", :remote => true %></p>
+		
+	<% flash.each do |name, msg| %>
+	<div id="flash_notice">
+	<%= content_tag :div, msg, id: "flash_#{name}" %>
+	
+	</div>
+	<% end %>
+</div>
+<br>	
+</div>	
+
+<div id="tabs_container">
+    <ul id="tabs">
+	   <li class="active"><a href="/">All</a></li>
+       <li><a href="#tab2">Top</a></li>
+       <li><a href="#tab3">Polls</a></li>
+		<div id="user_nav" style="float: right; margin-right: 10px">
+						
+		<% if user_signed_in? %>
+			Logged in as <strong><a href="#" data-dropdown="#dropdown-1"><%= current_user.username %></a></strong>.		
+		<% else %>
+			<%= link_to "Sign up", new_user_registration_path %> | 
+			<%= link_to "Login", new_user_session_path %>
+		<% end %>
+			
+			
+<div id="dropdown-1" class="dropdown dropdown-tip dropdown-anchor-right">
+	<div class="dropdown-tip">
+		<ul class="dropdown-menu">			
+			<li><%= link_to 'View Profile' %></li>
+			<li><%= link_to 'Edit Profile', edit_user_registration_path %></li>
+			<li><%= link_to 'Logout', destroy_user_session_path, method: :delete %></li>
+		</ul>
+	</div>
+</div>
+
+		</div>
+	</ul>
+</div>
+
+<div id="tabs_content_container">
+    <div id="tab1" class="tab_content" style="display: block;"><%= yield %></div>
+	<div id="tab2" class="tab_content"><p><%= render "top" %></p></div>
+	<div id="tab3" class="tab_content"><p><%= render 'polls' %></p></div>
+</div> 
+
+<br>
+
+</body>
+</html>

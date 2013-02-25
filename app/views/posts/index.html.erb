@@ -1,0 +1,41 @@
+
+<% @posts.each do |post| %>
+	<table class="post_table" align="center" width="850px" style="" onclick="document.location = 'posts/<%= post.id %>';">
+	  <tr height="60px">
+	    <td width="60px" align="center"><div class="post_images" style="background-image: url(<%= post.image_url %>); min-width: 50px;"></div></td>
+		<td width="60px" align="center"><div class="stats">+2<br>votes</div></td>
+		<td width="60px" align="center"><div class="stats">
+<% total_comments = Comment.count(:conditions => ["post_id = ?", post.id]) %>
+		<% if total_comments == 1 %>
+			<%= link_to "#{total_comments} comment", post %>
+		<% elsif total_comments >= 2 %>	
+			<a href="<%= post %>"><div class="many_votes"><%= "#{total_comments} comments" %></div></a>
+		<% else %>
+			<%= link_to "0 comments", post %>
+		<% end %>
+			</div></td>
+		
+				
+		<td width="60px" align="center"><div class="stats">120<br>views</div></td>
+		<td width="550px"><font size="3"><strong><%= link_to post.title, post.url %></font></strong> <span class="domain"><%= post.domain %></span>
+			<br>
+				<%= post.description %>			
+			</td>
+	<!-- 		 
+	  <td width="40px"><%= link_to 'Show', post %></td>
+	    <td width="40px"><%= link_to 'Edit', edit_post_path(post) %></td>
+	    <td width="40px"><%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %></td> -->
+	  </tr>
+	</table>
+<% end %>
+<br>	
+<table align="center" width="850px"><tr><td align="left">
+
+<%= paginate @posts %>
+<br><br>
+<br>
+</td></tr></table>
+
+
+
+
